@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { ShinyButton } from "@/components/ui/shiny-button";
 import { AuroraText } from "@/components/ui/aurora-text";
-import { NeonGradientCard } from "@/components/ui/neon-gradient-card"
+
 export default function HomePage() {
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
@@ -50,16 +50,11 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen  flex flex-col justify-center items-center p-8">
-      <AuroraText className="text-4xl font-bold mb-6">
+    <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-8">
+      <AuroraText className="text-4xl font-bold text-gray-800 mb-6">
         Enter Your Name
       </AuroraText>
-<NeonGradientCard>
-  <div className="p-4">
-    <p>Hello</p>
-    <span>Hover me</span>
-  </div>
-</NeonGradientCard>
+
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-xs">
         <input
           type="text"
