@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-
+import { Skiper30 } from "@/components/ui/skiper-ui/skiper30";
 function Loader() {
   return (
     <motion.div
@@ -79,7 +79,9 @@ export default function HomePage() {
     }
   };
 
-  return (
+  return (<>
+   
+ 
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-blue-100 flex flex-col justify-center items-center p-8">
       <motion.h1
         initial={{ opacity: 0, y: -20 }}
@@ -161,5 +163,7 @@ export default function HomePage() {
         )}
       </motion.div>
     </div>
+     <Skiper30 />
+     </>
   );
 }
