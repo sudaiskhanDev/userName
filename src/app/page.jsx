@@ -1,6 +1,7 @@
-'use client';
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+"use client";
+
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 function Loader() {
   return (
@@ -14,29 +15,68 @@ function Loader() {
     </motion.div>
   );
 }
-
-export default function AnimatedForm() {
-  const [name, setName] = useState('');
+export default function HomePage() {
+  const [name, setName] = useState("");
+  const [message, setMessage] = useState("");
   const [users, setUsers] = useState([]);
-  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/users");
+      const data = await res.json();
+      setUsers(data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setMessage('');
 
-    setTimeout(() => {
-      const newUser = { _id: Date.now(), name };
-      setUsers([...users, newUser]);
-      setMessage(`Saved "${name}" successfully!`);
-      setName('');
+    try {
+      const res = await fetch("/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      });
+
+      const data = await res.json();
+      setMessage(data.message);
+      setName("");
+      await fetchUsers();
+    } catch (error) {
+      console.error("Error saving user:", error);
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
-  const handleDelete = (id) => {
-    setUsers(users.filter((u) => u._id !== id));
+  const handleDelete = async (id) => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/users", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+
+      const data = await res.json();
+      setMessage(data.message);
+      await fetchUsers();
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -55,7 +95,7 @@ export default function AnimatedForm() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="flex flex-col gap-4 w-full max-w-xs bg-white p-6 rounded-xl shadow-xl"
+        className="flex flex-col gap-4 w-full max-w-sm bg-white p-6 rounded-xl shadow-xl"
       >
         <input
           type="text"
@@ -72,11 +112,11 @@ export default function AnimatedForm() {
           whileTap={{ scale: 0.95 }}
           className={`px-4 py-2 rounded-md text-white font-semibold transition-all duration-300 flex justify-center items-center ${
             loading
-              ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-purple-500 hover:to-blue-500 shadow-lg'
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-gradient-to-r from-blue-500 to-purple-500 hover:from-purple-500 hover:to-blue-500 shadow-lg"
           }`}
         >
-          {loading ? <Loader /> : 'Save'}
+          {loading ? <Loader /> : "Save"}
         </motion.button>
       </motion.form>
 
@@ -94,7 +134,7 @@ export default function AnimatedForm() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
-        className="mt-8 w-full max-w-xs"
+        className="mt-8 w-full max-w-sm"
       >
         <h2 className="text-xl font-semibold mb-2 text-gray-800">Saved Users:</h2>
         {loading ? (
