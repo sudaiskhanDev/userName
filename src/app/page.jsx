@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { ShinyButton } from "@/components/ui/shiny-button";
-import { AuroraText } from "@/components/ui/aurora-text";
 
 export default function HomePage() {
   const [name, setName] = useState("");
@@ -70,9 +69,9 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-8">
-      <AuroraText className="text-4xl font-bold text-gray-800 mb-6">
+      <h1 className="text-4xl font-bold text-black mb-6">
         Enter Your Name
-      </AuroraText>
+      </h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-xs">
         <input
