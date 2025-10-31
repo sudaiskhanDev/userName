@@ -8,7 +8,7 @@ export default function HomePage() {
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(false); // Loader state
+  const [loading, setLoading] = useState(false);
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -24,7 +24,7 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    fetchUsers(); // Page load pe users fetch karo
+    fetchUsers();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -41,9 +41,28 @@ export default function HomePage() {
       const data = await res.json();
       setMessage(data.message);
       setName("");
-      await fetchUsers(); // Save ke baad list update karo
+      await fetchUsers();
     } catch (error) {
       console.error("Error saving user:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/users", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+
+      const data = await res.json();
+      setMessage(data.message);
+      await fetchUsers();
+    } catch (error) {
+      console.error("Error deleting user:", error);
     } finally {
       setLoading(false);
     }
@@ -76,9 +95,18 @@ export default function HomePage() {
         {loading ? (
           <p className="text-gray-500">Loading users...</p>
         ) : (
-          <ul className="list-disc pl-5">
+          <ul className="list-disc pl-5 space-y-2">
             {users.map((u) => (
-              <li key={u._id}>{u.name}</li>
+              <li key={u._id} className="flex justify-between items-center">
+                <span>{u.name}</span>
+                <button
+                  onClick={() => handleDelete(u._id)}
+                  className="text-red-500 hover:underline text-sm ml-4"
+                  disabled={loading}
+                >
+                  Delete
+                </button>
+              </li>
             ))}
           </ul>
         )}

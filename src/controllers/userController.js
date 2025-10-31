@@ -9,8 +9,16 @@ export async function saveUserController(name) {
   return { success: true, message: "User saved", user };
 }
 
-// New function to get all users
 export async function getAllUsersController() {
   const users = await User.find({});
   return users;
+}
+
+export async function deleteUserController(id) {
+  if (!id) return { success: false, message: "User ID is required" };
+
+  const deleted = await User.findByIdAndDelete(id);
+  if (!deleted) return { success: false, message: "User not found" };
+
+  return { success: true, message: "User deleted" };
 }
