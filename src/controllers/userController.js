@@ -1,4 +1,4 @@
-import User from "@/models/User";
+import User from "@/models/Profile";
 
 export async function saveUserController(name) {
   if (!name) return { success: false, message: "Name is required" };
